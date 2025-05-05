@@ -35,6 +35,13 @@
     Näytä uusi viisaus
   </button>
 
+  <div style="margin-top: 3em;">
+    <h2>Kysy Lexalta</h2>
+    <input id="lexaInput" type="text" placeholder="Mikä askarruttaa?" style="padding: 0.5em; width: 60%; max-width: 400px;">
+    <button onclick="kysyLexaltaAPIlla()" style="padding: 0.5em 1em; margin-left: 0.5em;">Kysy</button>
+    <div id="lexaVastaus" style="margin-top: 1em; font-style: italic; color: #444;"></div>
+  </div>
+
   <footer>© 2025 Papa Lexa – pelialan setä</footer>
 
   <script>
@@ -71,6 +78,31 @@
       const indeksi = paivaVuodessa % viisaudet.length;
 
       document.getElementById('quote').textContent = viisaudet[indeksi];
+    }
+
+    async function kysyLexaltaAPIlla() {
+      const input = document.getElementById("lexaInput").value.trim();
+      if (!input) {
+        document.getElementById("lexaVastaus").textContent = "Kysy jotain ensin.";
+        return;
+      }
+
+      document.getElementById("lexaVastaus").textContent = "Lexa miettii hetken...";
+
+      try {
+        const response = await fetch("https://lexa-api-demo.vercel.app/api/ask", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json"
+          },
+          body: JSON.stringify({ kysymys: input })
+        });
+
+        const data = await response.json();
+        document.getElementById("lexaVastaus").textContent = "Lexa vastaa: " + data.vastaus;
+      } catch (e) {
+        document.getElementById("lexaVastaus").textContent = "Lexa meni kahville. Kokeile myöhemmin.";
+      }
     }
 
     haeViisaus();

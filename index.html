@@ -2,108 +2,81 @@
 <html lang="fi">
 <head>
   <meta charset="UTF-8">
-  <title>Papa Lexan Päivän Viisaus</title>
-  <link rel="icon" type="image/png" href="favicon.png">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Papa Lexan Viisaus</title>
   <style>
     body {
       font-family: 'Georgia', serif;
-      background: #f2f2f2;
-      color: #333;
+      background-color: #eeeeee;
       text-align: center;
-      padding: 3em;
+      padding: 20px;
+      color: #2c2c2c;
     }
-    .quote {
-      font-size: 1.6em;
-      max-width: 700px;
-      margin: auto;
+    h1 {
+      font-size: 2em;
+      margin-top: 0.5em;
     }
-    .date {
-      font-style: italic;
-      margin-bottom: 1em;
-      color: #555;
+    .viisaus {
+      font-size: 1.4em;
+      margin: 20px auto;
+      max-width: 600px;
     }
-    footer {
-      margin-top: 2em;
-      font-size: 0.9em;
-      color: #777;
-    }
-    input, button {
+    button {
       font-size: 1em;
-      padding: 0.5em;
-      margin-top: 1em;
+      padding: 10px 15px;
+      margin: 10px;
+      cursor: pointer;
+      background-color: #444;
+      color: white;
+      border: none;
+      border-radius: 5px;
     }
-    pre.debug {
-      text-align: left;
+    .kysymysbox {
       margin-top: 2em;
-      background: #eee;
-      padding: 1em;
-      border-radius: 10px;
-      max-width: 800px;
-      margin-left: auto;
-      margin-right: auto;
-      white-space: pre-wrap;
+    }
+    .pieni {
       font-size: 0.9em;
+      color: #666;
+    }
+    .debug {
+      display: none;
     }
   </style>
 </head>
 <body>
-  <img src="lexa.png" alt="Papa Lexa" style="width: 120px; border-radius: 50%; box-shadow: 0 4px 10px rgba(0,0,0,0.2); margin-bottom: 1em;">
+  <img src="lexa.png" alt="Papa Lexa" width="120" height="120">
   <h1>📜 Papa Lexan Päivän Viisaus</h1>
-  <div class="date" id="date"></div>
-  <div class="quote" id="quote">Ladataan viisautta...</div>
-  <button onclick="haeViisaus()">Näytä uusi viisaus</button>
-
-  <hr style="margin: 3em 0;">
-
-  <h2>💬 Kysy Lexalta</h2>
-  <input type="text" id="kysymys" placeholder="Kirjoita kysymys..." size="40">
-  <br>
-  <button onclick="kysyLexalta()">Kysy</button>
-  <div id="vastaus" style="margin-top: 1em; font-style: italic;"></div>
-
-  <h3 style="margin-top: 2em;">🧪 Testaa Lexaa</h3>
-  <button onclick="testaaLexaa()">Testaa esimerkkikysymyksellä</button>
-
-  <pre id="debug" class="debug"></pre>
-
-  <footer>© 2025 Papa Lexa – pelialan setä</footer>
+  <p class="pieni"><em>Tänä päivänä <span id="paiva"></span></em></p>
+  <div class="viisaus" id="viisaus">Lexa lataa viisautta...</div>
+  <button onclick="naytaUusi()">Näytä uusi viisaus</button>
 
   <script>
-    async function haeViisaus() {
-      const vastaus = await fetch('viisaudet.json');
-      const viisaudet = await vastaus.json();
+    const viisaudet = [
+      "Tiimi ei tarvitse sankaria – se tarvitsee debuggavan realistin.",
+      "Kun build menee rikki perjantaina, viikonloppu alkaa bugien arpomiskierroksella.",
+      "Jos commitissa lukee 'final', valehtelet itsellesi.",
+      "Hyvä tuottaja on kuin toimiva Jenkins – huomaat sen vasta kun se puuttuu.",
+      "Deadline ei ole tapahtuma, se on mielentila.",
+      "Pelimoottori ei ole ongelma. Motivaatio on.",
+      "Jos kaikki menee suunnitelman mukaan, joku valehtelee.",
+      "Jos jokin toimii heti, olet todennäköisesti unohtanut testata tärkeimmän.",
+      "Feature creep on peli, jossa voittaa se joka sanoo ekana ei.",
+      "Kun design dokkari on valmis, peli ei ole enää se sama peli."
+    ];
 
-      const nyt = new Date();
-      const paivaVuodessa = Math.floor((nyt - new Date(nyt.getFullYear(), 0, 0)) / 86400000);
-      const indeksi = paivaVuodessa % viisaudet.length;
-
-      document.getElementById('quote').textContent = viisaudet[indeksi];
-
-      const pvm = new Intl.DateTimeFormat('fi-FI', { dateStyle: 'full' }).format(nyt);
-      document.getElementById('date').textContent = `Tänä päivänä ${pvm}`;
+    function naytaUusi() {
+      const index = Math.floor(Math.random() * viisaudet.length);
+      document.getElementById('viisaus').innerText = viisaudet[index];
     }
 
-    async function kysyLexalta() {
-      const kysymys = document.getElementById('kysymys').value;
-      document.getElementById('vastaus').textContent = "Lexa miettii...";
+    // Päivämäärä
+    const kuukaudet = ["tammikuuta", "helmikuuta", "maaliskuuta", "huhtikuuta", "toukokuuta", "kesäkuuta", "heinäkuuta", "elokuuta", "syyskuuta", "lokakuuta", "marraskuuta", "joulukuuta"];
+    const nyt = new Date();
+    const paiva = `${nyt.getDate()}. ${kuukaudet[nyt.getMonth()]} ${nyt.getFullYear()}`;
+    document.getElementById("paiva").innerText = paiva;
 
-      const vastaus = await fetch('/api/ask', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ kysymys })
-      });
-
-      const data = await vastaus.json();
-      document.getElementById('vastaus').textContent = data.vastaus || "Lexa ei nyt saanut sanottua mitään järkevää. Ehkä kysymys oli liian hieno?";
-      document.getElementById('debug').textContent = JSON.stringify(data, null, 2);
-    }
-
-    function testaaLexaa() {
-      document.getElementById('kysymys').value = "Mikä on paras pelimoottori 2D-indiepelille?";
-      kysyLexalta();
-    }
-
-    haeViisaus();
+    // Ensimmäinen viisaus heti näkyviin
+    naytaUusi();
   </script>
 </body>
 </html>

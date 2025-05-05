@@ -13,7 +13,7 @@ export default async function handler(req, res) {
         Authorization: `Bearer ${process.env.OPENAI_API_KEY}`
       },
       body: JSON.stringify({
-        model: "gpt-3.5-turbo",
+        model: "gpt-3.5-turbo", // vaihtoon gpt-4 jos toimii
         messages: [
           {
             role: "system",
@@ -29,10 +29,18 @@ export default async function handler(req, res) {
     });
 
     const data = await response.json();
-    const vastaus = data.choices?.[0]?.message?.content || "Lexa vaikeni, kuten vanhat sedät joskus.";
+    console.log("GPT vastaus:", data);
+
+    const vastaus = data.choices?.[0]?.message?.content?.trim();
+
+    if (!vastaus) {
+      return res.status(200).json({ vastaus: "Lexa ei nyt saanut sanottua mitään järkevää. Ehkä kysymys oli liian hieno?" });
+    }
+
     res.status(200).json({ vastaus });
+
   } catch (e) {
+    console.error("Lexan virhe:", e);
     res.status(500).json({ error: "Lexa meni kahville." });
   }
 }
-

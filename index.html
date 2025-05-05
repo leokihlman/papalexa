@@ -14,10 +14,10 @@
       background-color: #eeeeee;
     }
     .kortti {
-      width: 100vmin;
-      height: 100vmin;
-      max-width: 100vw;
-      max-height: 100vh;
+      width: 50vmin;
+      height: 50vmin;
+      max-width: 50vw;
+      max-height: 50vh;
       background: #f9f9f9;
       border-radius: 0;
       box-shadow: 0 0 20px rgba(0,0,0,0.1);
@@ -47,8 +47,9 @@
       line-height: 1.5em;
       color: #222;
     }
-    .nappi {
-      margin-top: 1.5em;
+    .nappi-wrapper {
+      margin-top: 1em;
+      text-align: center;
     }
     button {
       font-size: 1em;
@@ -67,10 +68,10 @@
     <img src="lexa.png" alt="Papa Lexa">
     <div class="paiva"><em>Tänä päivänä <span id="paiva"></span></em></div>
     <div id="viisaus" class="viisaus">Lexa lataa viisautta...</div>
-    <div class="nappi">
-      <button onclick="naytaUusi()">Näytä uusi viisaus</button>
-      <button onclick="lataaKuvana()">Lataa kuvana</button>
-    </div>
+  </div>
+  <div class="nappi-wrapper">
+    <button onclick="naytaUusi()">Näytä uusi viisaus</button>
+    <button onclick="lataaKuvana()">Lataa kuvana</button>
   </div>
 
   <script>

@@ -16,10 +16,20 @@
       font-size: 2em;
       margin-top: 0.5em;
     }
-    .viisaus {
-      font-size: 1.4em;
+    .kortti {
+      width: 400px;
+      height: 400px;
+      background: #f9f9f9;
+      border-radius: 20px;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 30px;
+      font-family: 'Georgia', serif;
+      font-size: 20px;
+      text-align: center;
       margin: 20px auto;
-      max-width: 600px;
     }
     button {
       font-size: 1em;
@@ -31,15 +41,9 @@
       border: none;
       border-radius: 5px;
     }
-    .kysymysbox {
-      margin-top: 2em;
-    }
     .pieni {
       font-size: 0.9em;
       color: #666;
-    }
-    .debug {
-      display: none;
     }
   </style>
 </head>
@@ -47,7 +51,7 @@
   <img src="lexa.png" alt="Papa Lexa" width="120" height="120">
   <h1>📜 Papa Lexan Päivän Viisaus</h1>
   <p class="pieni"><em>Tänä päivänä <span id="paiva"></span></em></p>
-  <div class="viisaus" id="viisaus">Lexa lataa viisautta...</div>
+  <div id="viisauskortti" class="kortti">Lexa lataa viisautta...</div>
   <button onclick="naytaUusi()">Näytä uusi viisaus</button>
 
   <script>
@@ -66,7 +70,7 @@
 
     function naytaUusi() {
       const index = Math.floor(Math.random() * viisaudet.length);
-      document.getElementById('viisaus').innerText = viisaudet[index];
+      document.getElementById('viisauskortti').innerText = viisaudet[index];
     }
 
     // Päivämäärä

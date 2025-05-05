@@ -49,9 +49,11 @@
   <button onclick="kysyLexalta()">Kysy</button>
   <div id="vastaus" style="margin-top: 1em; font-style: italic;"></div>
 
+  <h3 style="margin-top: 2em;">🧪 Testaa Lexaa</h3>
+  <button onclick="testaaLexaa()">Testaa esimerkkikysymyksellä</button>
+
   <footer>© 2025 Papa Lexa – pelialan setä</footer>
 
-  
   <script>
     async function haeViisaus() {
       const vastaus = await fetch('viisaudet.json');
@@ -78,7 +80,13 @@
       });
 
       const data = await vastaus.json();
+      console.log("Lexan raakadata:", data);
       document.getElementById('vastaus').textContent = data.vastaus || "Lexa vaikeni.";
+    }
+
+    function testaaLexaa() {
+      document.getElementById('kysymys').value = "Mikä on paras pelimoottori 2D-indiepelille?";
+      kysyLexalta();
     }
 
     haeViisaus();

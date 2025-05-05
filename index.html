@@ -5,54 +5,70 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Papa Lexan Viisaus</title>
   <style>
-    body {
+    html, body {
+      margin: 0;
+      padding: 0;
+      height: 100%;
       font-family: 'Georgia', serif;
       background-color: #eeeeee;
-      text-align: center;
-      padding: 20px;
-      color: #2c2c2c;
-    }
-    h1 {
-      font-size: 2em;
-      margin-top: 0.5em;
     }
     .kortti {
-      width: 400px;
-      height: 400px;
+      width: 100vmin;
+      height: 100vmin;
+      max-width: 100vw;
+      max-height: 100vh;
       background: #f9f9f9;
-      border-radius: 20px;
-      box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+      border-radius: 0;
+      box-shadow: 0 0 20px rgba(0,0,0,0.1);
       display: flex;
-      justify-content: center;
+      flex-direction: column;
       align-items: center;
-      padding: 30px;
-      font-family: 'Georgia', serif;
-      font-size: 20px;
+      justify-content: center;
+      padding: 2em;
+      box-sizing: border-box;
       text-align: center;
-      margin: 20px auto;
+      margin: auto;
+    }
+    .kortti img {
+      width: 100px;
+      border-radius: 50%;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+      margin-bottom: 1em;
+    }
+    .paiva {
+      font-size: 1em;
+      color: #666;
+      margin-bottom: 0.5em;
+    }
+    .viisaus {
+      font-size: 1.4em;
+      max-width: 80%;
+      line-height: 1.5em;
+      color: #222;
+    }
+    .nappi {
+      margin-top: 1.5em;
     }
     button {
       font-size: 1em;
       padding: 10px 15px;
-      margin: 10px;
       cursor: pointer;
       background-color: #444;
       color: white;
       border: none;
       border-radius: 5px;
     }
-    .pieni {
-      font-size: 0.9em;
-      color: #666;
-    }
   </style>
 </head>
 <body>
-  <img src="lexa.png" alt="Papa Lexa" width="120" height="120">
-  <h1>📜 Papa Lexan Päivän Viisaus</h1>
-  <p class="pieni"><em>Tänä päivänä <span id="paiva"></span></em></p>
-  <div id="viisauskortti" class="kortti">Lexa lataa viisautta...</div>
-  <button onclick="naytaUusi()">Näytä uusi viisaus</button>
+  <div class="kortti">
+    <img src="lexa.png" alt="Papa Lexa">
+    <div class="paiva"><em>Tänä päivänä <span id="paiva"></span></em></div>
+    <div id="viisaus" class="viisaus">Lexa lataa viisautta...</div>
+    <div class="nappi">
+      <button onclick="naytaUusi()">Näytä uusi viisaus</button>
+    </div>
+  </div>
 
   <script>
     const viisaudet = [
@@ -70,16 +86,14 @@
 
     function naytaUusi() {
       const index = Math.floor(Math.random() * viisaudet.length);
-      document.getElementById('viisauskortti').innerText = viisaudet[index];
+      document.getElementById('viisaus').innerText = viisaudet[index];
     }
 
-    // Päivämäärä
     const kuukaudet = ["tammikuuta", "helmikuuta", "maaliskuuta", "huhtikuuta", "toukokuuta", "kesäkuuta", "heinäkuuta", "elokuuta", "syyskuuta", "lokakuuta", "marraskuuta", "joulukuuta"];
     const nyt = new Date();
     const paiva = `${nyt.getDate()}. ${kuukaudet[nyt.getMonth()]} ${nyt.getFullYear()}`;
     document.getElementById("paiva").innerText = paiva;
 
-    // Ensimmäinen viisaus heti näkyviin
     naytaUusi();
   </script>
 </body>

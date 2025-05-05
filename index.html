@@ -17,93 +17,67 @@
       max-width: 700px;
       margin: auto;
     }
+    .date {
+      font-style: italic;
+      margin-bottom: 1em;
+      color: #555;
+    }
     footer {
       margin-top: 2em;
       font-size: 0.9em;
       color: #777;
     }
+    input, button {
+      font-size: 1em;
+      padding: 0.5em;
+      margin-top: 1em;
+    }
   </style>
 </head>
 <body>
   <img src="lexa.png" alt="Papa Lexa" style="width: 120px; border-radius: 50%; box-shadow: 0 4px 10px rgba(0,0,0,0.2); margin-bottom: 1em;">
-
   <h1>📜 Papa Lexan Päivän Viisaus</h1>
-  <div id="paivamaara" style="margin-bottom: 1em; font-style: italic; color: #555;"></div>
+  <div class="date" id="date"></div>
   <div class="quote" id="quote">Ladataan viisautta...</div>
+  <button onclick="haeViisaus()">Näytä uusi viisaus</button>
 
-  <button onclick="arvoViisaus()" style="margin-top: 1.5em; padding: 0.5em 1em; font-size: 1em; cursor: pointer;">
-    Näytä uusi viisaus
-  </button>
+  <hr style="margin: 3em 0;">
 
-  <div style="margin-top: 3em;">
-    <h2>Kysy Lexalta</h2>
-    <input id="lexaInput" type="text" placeholder="Mikä askarruttaa?" style="padding: 0.5em; width: 60%; max-width: 400px;">
-    <button onclick="kysyLexaltaAPIlla()" style="padding: 0.5em 1em; margin-left: 0.5em;">Kysy</button>
-    <div id="lexaVastaus" style="margin-top: 1em; font-style: italic; color: #444;"></div>
-  </div>
+  <h2>💬 Kysy Lexalta</h2>
+  <input type="text" id="kysymys" placeholder="Kirjoita kysymys..." size="40">
+  <br>
+  <button onclick="kysyLexalta()">Kysy</button>
+  <div id="vastaus" style="margin-top: 1em; font-style: italic;"></div>
 
-  
   <footer>© 2025 Papa Lexa – pelialan setä</footer>
 
   <script>
-    let viisaudetGlobaalisti = [];
-
-    function muodostaPaivamaaraTeksti() {
-      const kuukaudet = [
-        "tammikuuta", "helmikuuta", "maaliskuuta", "huhtikuuta",
-        "toukokuuta", "kesäkuuta", "heinäkuuta", "elokuuta",
-        "syyskuuta", "lokakuuta", "marraskuuta", "joulukuuta"
-      ];
-      const nyt = new Date();
-      const päivä = nyt.getDate();
-      const kuukausi = kuukaudet[nyt.getMonth()];
-      return `Tänä päivänä ${päivä}. ${kuukausi}`;
-    }
-
-    function arvoViisaus() {
-      if (viisaudetGlobaalisti.length > 0) {
-        const satunnainen = Math.floor(Math.random() * viisaudetGlobaalisti.length);
-        document.getElementById('quote').textContent = viisaudetGlobaalisti[satunnainen];
-      }
-    }
-
     async function haeViisaus() {
-      document.getElementById("paivamaara").textContent = muodostaPaivamaaraTeksti();
-
       const vastaus = await fetch('viisaudet.json');
       const viisaudet = await vastaus.json();
-      viisaudetGlobaalisti = viisaudet;
 
       const nyt = new Date();
       const paivaVuodessa = Math.floor((nyt - new Date(nyt.getFullYear(), 0, 0)) / 86400000);
       const indeksi = paivaVuodessa % viisaudet.length;
 
       document.getElementById('quote').textContent = viisaudet[indeksi];
+
+      const pvm = new Intl.DateTimeFormat('fi-FI', { dateStyle: 'full' }).format(nyt);
+      document.getElementById('date').textContent = `Tänä päivänä ${pvm}`;
     }
 
-    async function kysyLexaltaAPIlla() {
-      const input = document.getElementById("lexaInput").value.trim();
-      if (!input) {
-        document.getElementById("lexaVastaus").textContent = "Kysy jotain ensin.";
-        return;
-      }
+    async function kysyLexalta() {
+      const kysymys = document.getElementById('kysymys').value;
+      document.getElementById('vastaus').textContent = "Lexa miettii...";
 
-      document.getElementById("lexaVastaus").textContent = "Lexa miettii hetken...";
+      const vastaus = await fetch('/api/ask', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ kysymys })
+      });
 
-      try {
-        const response = await fetch("https://lexa-api.vercel.app/api/ask", {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json"
-          },
-          body: JSON.stringify({ kysymys: input })
-        });
-
-        const data = await response.json();
-        document.getElementById("lexaVastaus").textContent = "Lexa vastaa: " + data.vastaus;
-      } catch (e) {
-        document.getElementById("lexaVastaus").textContent = "Lexa meni kahville. Kokeile myöhemmin.";
-      }
+      const data = await vastaus.json();
+      document.getElementById('vastaus').textContent = data.vastaus || "Lexa vaikeni.";
     }
 
     haeViisaus();

@@ -28,13 +28,18 @@
   <img src="lexa.png" alt="Papa Lexa" style="width: 120px; border-radius: 50%; box-shadow: 0 4px 10px rgba(0,0,0,0.2); margin-bottom: 1em;">
 
   <h1>📜 Papa Lexan Päivän Viisaus</h1>
-
   <div id="paivamaara" style="margin-bottom: 1em; font-style: italic; color: #555;"></div>
   <div class="quote" id="quote">Ladataan viisautta...</div>
+
+  <button onclick="arvoViisaus()" style="margin-top: 1.5em; padding: 0.5em 1em; font-size: 1em; cursor: pointer;">
+    Näytä uusi viisaus
+  </button>
 
   <footer>© 2025 Papa Lexa – pelialan setä</footer>
 
   <script>
+    let viisaudetGlobaalisti = [];
+
     function muodostaPaivamaaraTeksti() {
       const kuukaudet = [
         "tammikuuta", "helmikuuta", "maaliskuuta", "huhtikuuta",
@@ -47,11 +52,19 @@
       return `Tänä päivänä ${päivä}. ${kuukausi}`;
     }
 
+    function arvoViisaus() {
+      if (viisaudetGlobaalisti.length > 0) {
+        const satunnainen = Math.floor(Math.random() * viisaudetGlobaalisti.length);
+        document.getElementById('quote').textContent = viisaudetGlobaalisti[satunnainen];
+      }
+    }
+
     async function haeViisaus() {
       document.getElementById("paivamaara").textContent = muodostaPaivamaaraTeksti();
 
       const vastaus = await fetch('viisaudet.json');
       const viisaudet = await vastaus.json();
+      viisaudetGlobaalisti = viisaudet;
 
       const nyt = new Date();
       const paivaVuodessa = Math.floor((nyt - new Date(nyt.getFullYear(), 0, 0)) / 86400000);

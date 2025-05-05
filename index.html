@@ -32,6 +32,18 @@
       padding: 0.5em;
       margin-top: 1em;
     }
+    pre.debug {
+      text-align: left;
+      margin-top: 2em;
+      background: #eee;
+      padding: 1em;
+      border-radius: 10px;
+      max-width: 800px;
+      margin-left: auto;
+      margin-right: auto;
+      white-space: pre-wrap;
+      font-size: 0.9em;
+    }
   </style>
 </head>
 <body>
@@ -51,6 +63,8 @@
 
   <h3 style="margin-top: 2em;">🧪 Testaa Lexaa</h3>
   <button onclick="testaaLexaa()">Testaa esimerkkikysymyksellä</button>
+
+  <pre id="debug" class="debug"></pre>
 
   <footer>© 2025 Papa Lexa – pelialan setä</footer>
 
@@ -80,8 +94,8 @@
       });
 
       const data = await vastaus.json();
-      console.log("Lexan raakadata:", data);
-      document.getElementById('vastaus').textContent = data.vastaus || "Lexa vaikeni.";
+      document.getElementById('vastaus').textContent = data.vastaus || "Lexa ei nyt saanut sanottua mitään järkevää. Ehkä kysymys oli liian hieno?";
+      document.getElementById('debug').textContent = JSON.stringify(data, null, 2);
     }
 
     function testaaLexaa() {

@@ -71,20 +71,16 @@
   </div>
 
   <script>
-    const viisaudet = [
-      "Tiimi ei tarvitse sankaria – se tarvitsee debuggavan realistin.",
-      "Kun build menee rikki perjantaina, viikonloppu alkaa bugien arpomiskierroksella.",
-      "Jos commitissa lukee 'final', valehtelet itsellesi.",
-      "Hyvä tuottaja on kuin toimiva Jenkins – huomaat sen vasta kun se puuttuu.",
-      "Deadline ei ole tapahtuma, se on mielentila.",
-      "Pelimoottori ei ole ongelma. Motivaatio on.",
-      "Jos kaikki menee suunnitelman mukaan, joku valehtelee.",
-      "Jos jokin toimii heti, olet todennäköisesti unohtanut testata tärkeimmän.",
-      "Feature creep on peli, jossa voittaa se joka sanoo ekana ei.",
-      "Kun design dokkari on valmis, peli ei ole enää se sama peli."
-    ];
+    let viisaudet = [];
+
+    async function haeViisaudet() {
+      const vastaus = await fetch('viisaudet.json');
+      viisaudet = await vastaus.json();
+      naytaUusi();
+    }
 
     function naytaUusi() {
+      if (!viisaudet.length) return;
       const index = Math.floor(Math.random() * viisaudet.length);
       document.getElementById('viisaus').innerText = viisaudet[index];
     }
@@ -94,7 +90,7 @@
     const paiva = `${nyt.getDate()}. ${kuukaudet[nyt.getMonth()]} ${nyt.getFullYear()}`;
     document.getElementById("paiva").innerText = paiva;
 
-    naytaUusi();
+    haeViisaudet();
   </script>
 </body>
 </html>

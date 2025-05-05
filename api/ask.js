@@ -14,14 +14,14 @@ export default async function handler(req, res) {
   console.log("API-avain paikalla:", !!process.env.OPENAI_API_KEY);
 
   try {
-    const vastaus = await fetch('https://api.openai.com/v1/chat/completions', {
+    const response = await fetch('https://api.openai.com/v1/chat/completions', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
         'Authorization': `Bearer ${process.env.OPENAI_API_KEY}`,
       },
       body: JSON.stringify({
-        model: 'gpt-3.5-turbo',
+        model: 'gpt-4o', // 🔥 vaihda tähän oikea ja toimiva malli!
         messages: [
           {
             role: 'system',
@@ -36,7 +36,7 @@ export default async function handler(req, res) {
       }),
     });
 
-    const data = await vastaus.json();
+    const data = await response.json();
     console.log("OpenAI-palautus:", data);
 
     const lexanVastaus = data.choices?.[0]?.message?.content;

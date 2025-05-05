@@ -1,85 +1,92 @@
 <!DOCTYPE html>
 <html lang="fi">
 <head>
-  <meta charset="UTF-8" />
-  <title>Papa Lexan Viisaus</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <link rel="icon" type="image/png" href="favicon.png" />
+  <meta charset="UTF-8">
+  <title>Papa Lexa sanoo</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
   <style>
     html, body {
       margin: 0;
       padding: 0;
       height: 100%;
-      font-family: 'Georgia', serif;
-      background: linear-gradient(135deg, #f4e2d8, #ba5370);
+      font-family: Georgia, serif;
+      background: linear-gradient(to bottom, #f8cdda, #f88ca1);
       display: flex;
       flex-direction: column;
-      justify-content: center;
       align-items: center;
+      justify-content: center;
     }
+
     .card {
       width: 50vmin;
       height: 50vmin;
-      background: white;
-      box-shadow: 0 8px 16px rgba(0,0,0,0.3);
+      background: #aee2f9;
       border-radius: 20px;
-      padding: 2em;
+      box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3);
+      padding: 1em;
       display: flex;
       flex-direction: column;
-      justify-content: space-between;
       align-items: center;
+      justify-content: space-between;
       text-align: center;
-      position: relative;
     }
+
     .card img {
       width: 80px;
+      height: 80px;
       border-radius: 50%;
-      box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+      margin-top: 0.5em;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.2);
     }
+
     .date {
+      color: #fff;
       font-size: 1em;
-      color: #666;
       margin-top: 0.5em;
     }
+
     .sanoo {
       font-weight: bold;
+      font-size: 1.5em;
       margin-top: 0.2em;
+      color: #222;
     }
-    .quote {
-      font-size: 1.2em;
-      margin: 1em 0;
+
+    .quote-box {
+      background: #fff9c4;
+      padding: 1em;
+      margin: 0.5em 0;
+      border-radius: 8px;
+      font-size: 1em;
+      color: #222;
     }
-    footer {
-      font-size: 0.7em;
-      color: #aaa;
-    }
+
     .buttons {
       margin-top: 1em;
       display: flex;
       gap: 1em;
     }
+
     button {
-      padding: 0.5em 1em;
-      font-size: 0.9em;
+      padding: 0.6em 1.2em;
       border: none;
       border-radius: 6px;
       background: #333;
       color: white;
+      font-size: 1em;
       cursor: pointer;
-      box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
     }
   </style>
 </head>
 <body>
+
   <div id="viisausCard" class="card">
-    <div>
-      <img src="lexa.png" alt="Papa Lexa" />
-      <div class="date" id="date"></div>
-      <div class="sanoo">Papa Lexa sanoo:</div>
-    </div>
-    <div class="quote" id="quote">Ladataan viisautta...</div>
-    <footer>© Papa Lexa 2025</footer>
+    <img src="lexa.png" alt="Papa Lexa" />
+    <div class="date" id="date"></div>
+    <div class="sanoo">Papa Lexa sanoo:</div>
+    <div class="quote-box" id="quote">Ladataan viisautta...</div>
   </div>
 
   <div class="buttons">
@@ -115,11 +122,7 @@
 
     function lataaKuvana() {
       const kortti = document.getElementById('viisausCard');
-      html2canvas(kortti, {
-        backgroundColor: null,
-        scrollY: -window.scrollY,
-        scale: window.devicePixelRatio
-      }).then(canvas => {
+      html2canvas(kortti).then(canvas => {
         const linkki = document.createElement('a');
         linkki.download = 'papa-lexa-viisaus.png';
         linkki.href = canvas.toDataURL();
@@ -129,5 +132,6 @@
 
     haeViisaus();
   </script>
+
 </body>
 </html>

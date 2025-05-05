@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="fi">
 <head>
@@ -26,14 +25,31 @@
   </style>
 </head>
 <body>
-<img src="./lexa.png" alt="Papa Lexa" style="width: 120px; border-radius: 50%; box-shadow: 0 4px 10px rgba(0,0,0,0.2); margin-bottom: 1em;">
+  <img src="lexa.png" alt="Papa Lexa" style="width: 120px; border-radius: 50%; box-shadow: 0 4px 10px rgba(0,0,0,0.2); margin-bottom: 1em;">
+
   <h1>📜 Papa Lexan Päivän Viisaus</h1>
+
+  <div id="paivamaara" style="margin-bottom: 1em; font-style: italic; color: #555;"></div>
   <div class="quote" id="quote">Ladataan viisautta...</div>
 
   <footer>© 2025 Papa Lexa – pelialan setä</footer>
 
   <script>
+    function muodostaPaivamaaraTeksti() {
+      const kuukaudet = [
+        "tammikuuta", "helmikuuta", "maaliskuuta", "huhtikuuta",
+        "toukokuuta", "kesäkuuta", "heinäkuuta", "elokuuta",
+        "syyskuuta", "lokakuuta", "marraskuuta", "joulukuuta"
+      ];
+      const nyt = new Date();
+      const päivä = nyt.getDate();
+      const kuukausi = kuukaudet[nyt.getMonth()];
+      return `Tänä päivänä ${päivä}. ${kuukausi}`;
+    }
+
     async function haeViisaus() {
+      document.getElementById("paivamaara").textContent = muodostaPaivamaaraTeksti();
+
       const vastaus = await fetch('viisaudet.json');
       const viisaudet = await vastaus.json();
 

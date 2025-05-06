@@ -1,147 +1,157 @@
 <!DOCTYPE html>
 <html lang="fi">
 <head>
-  <meta charset="UTF-8">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Papa Lexa sanoo</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
   <style>
-    html, body {
+    body {
       margin: 0;
-      padding: 0;
-      height: 100%;
-      font-family: Georgia, serif;
-      background: linear-gradient(to bottom, #f8cdda, #f88ca1);
+      font-family: 'Georgia', serif;
+      background: linear-gradient(to bottom, #f8cbd1, #d57ea3);
       display: flex;
       flex-direction: column;
       align-items: center;
-      justify-content: center;
+      justify-content: start;
+      min-height: 100vh;
     }
 
-    .card {
-      width: 50vmin;
-      height: 60vmin;
-      background: #aee2f9;
+    .container {
+      margin-top: 30px;
+      width: 50vw;
+      aspect-ratio: 1 / 1;
+      background: #b2ebf2;
       border-radius: 20px;
-      box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3);
-      padding: 1em;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.3);
       display: flex;
       flex-direction: column;
       align-items: center;
       justify-content: space-between;
-      text-align: center;
+      padding: 1em;
+      box-sizing: border-box;
     }
 
-    .card img {
-      width: 80px;
-      height: 80px;
+    .papa-img {
+      width: 100px;
+      height: 100px;
       border-radius: 50%;
-      margin-top: 0.5em;
-      box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+      object-fit: cover;
+      margin-top: 10px;
     }
 
     .date {
-      color: #000;
       font-size: 1em;
-      margin-top: 0.5em;
+      color: black;
+      margin-top: 10px;
     }
 
-    .sanoo {
+    .title {
       font-weight: bold;
       font-size: 1.5em;
-      margin-top: 0.2em;
+      text-align: center;
       color: #222;
     }
 
-    .quote-box {
+    .quote {
       background: #fff9c4;
       padding: 1em;
-      margin: 0.5em 0;
-      argin-bottom: 80px;
-      border-radius: 8px;
-      font-size: 1em;
-      color: #222;
+      border-radius: 10px;
+      text-align: center;
+      font-size: 1.1em;
+      margin: 10px;
     }
 
     .buttons {
-      margin-top: 1em;
+      margin-top: 20px;
       display: flex;
-      gap: 1em;
+      gap: 10px;
+      flex-wrap: wrap;
+      justify-content: center;
     }
 
-    button {
-      padding: 0.6em 1.2em;
-      border: none;
-      border-radius: 6px;
+    .buttons button, .buttons a {
       background: #333;
       color: white;
-      font-size: 1em;
+      border: none;
+      padding: 10px 16px;
+      border-radius: 8px;
       cursor: pointer;
-      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+      font-size: 1em;
+      text-decoration: none;
+    }
+
+    .chat-link {
+      margin-top: 20px;
+      background: #000;
+      color: white;
+      padding: 10px 16px;
+      border-radius: 8px;
+      text-decoration: none;
+      display: inline-block;
+    }
+
+    @media (max-width: 600px) {
+      .container {
+        width: 90vw;
+      }
     }
   </style>
 </head>
 <body>
 
-  <div id="viisausCard" class="card">
-    <img src="lexa.png" alt="Papa Lexa" />
+  <div class="container" id="quote-box">
+    <img src="papa.png" alt="Papa Lexa" class="papa-img" />
     <div class="date" id="date"></div>
-    <div class="sanoo">Papa Lexa sanoo:</div>
-    <div class="quote-box" id="quote">Ladataan viisautta...</div>
+    <div class="title">Papa Lexa sanoo:</div>
+    <div class="quote" id="quote">Odota hetki...</div>
   </div>
 
   <div class="buttons">
-    <button onclick="haeViisaus()">Näytä uusi viisaus</button>
+    <button onclick="näytäUusi()">Näytä uusi viisaus</button>
     <button onclick="lataaKuvana()">Lataa kuvana</button>
   </div>
 
+  <a class="chat-link" href="https://chatgpt.com/g/g-67e2cb8a0d908191bdb6ebb7af5b9205-papa-lexa" target="_blank">
+    🤖 Haluutko jutella?
+  </a>
+
   <script>
-    let kaikkiViisaudet = [];
+    const viisaudet = [
+      "Jos kaikki toimii, testaa lisää.",
+      "Yksi if-lause voi pelastaa päivän.",
+      "Deadline tarkoittaa, että nyt pitää oikeasti tehdä jotain.",
+      "Jos ei toimi, käynnistä uudelleen.",
+      "Kaikki menee rikki ennen julkaisua – se on laki."
+    ];
 
-    function muodostaPvmTeksti() {
-      const pvm = new Date();
-      const kuukaudet = [
-        "tammikuuta", "helmikuuta", "maaliskuuta", "huhtikuuta", "toukokuuta", "kesäkuuta",
-        "heinäkuuta", "elokuuta", "syyskuuta", "lokakuuta", "marraskuuta", "joulukuuta"
-      ];
-      return `Tänä päivänä ${pvm.getDate()}. ${kuukaudet[pvm.getMonth()]}`;
-    }
-
-    async function haeViisaus() {
-      try {
-        if (kaikkiViisaudet.length === 0) {
-          const res = await fetch("viisaudet.json");
-          kaikkiViisaudet = await res.json();
-        }
-        const indeksi = Math.floor(Math.random() * kaikkiViisaudet.length);
-        document.getElementById("quote").textContent = kaikkiViisaudet[indeksi];
-        document.getElementById("date").textContent = muodostaPvmTeksti();
-      } catch (e) {
-        document.getElementById("quote").textContent = "Lexa vaikenee tänään. ☕";
-      }
+    function näytäUusi() {
+      const random = viisaudet[Math.floor(Math.random() * viisaudet.length)];
+      document.getElementById("quote").innerText = random;
     }
 
     function lataaKuvana() {
-      const kortti = document.getElementById('viisausCard');
-      html2canvas(kortti).then(canvas => {
-        const linkki = document.createElement('a');
-        linkki.download = 'papa-lexa-viisaus.png';
-        linkki.href = canvas.toDataURL();
-        linkki.click();
+      html2canvas(document.querySelector("#quote-box")).then(canvas => {
+        const link = document.createElement('a');
+        link.download = 'papa-lexa-viisaus.png';
+        link.href = canvas.toDataURL();
+        link.click();
       });
     }
 
-    haeViisaus();
+    // Aseta päivämäärä
+    const päivämäärä = new Date().toLocaleDateString('fi-FI', {
+      weekday: 'long', day: 'numeric', month: 'long', year: 'numeric'
+    });
+    document.getElementById("date").innerText = `Tänä päivänä ${päivämäärä}`;
+
+    // Lataa html2canvas
+    const script = document.createElement('script');
+    script.src = 'https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js';
+    document.body.appendChild(script);
+
+    // Ensimmäinen viisaus
+    näytäUusi();
   </script>
 
-  <div style="margin-top: 2rem; text-align: center;">
-  <a href="https://chatgpt.com/g/g-67e2cb8a0d908191bdb6ebb7af5b9205-papa-lexa" 
-     target="_blank" 
-     style="display: inline-block; background-color: #111; color: white; padding: 12px 20px; border-radius: 8px; text-decoration: none; font-family: 'Georgia', serif; font-size: 16px;">
-    🤖 Haluutko jutella?
-  </a>
-</div>
-
-  
 </body>
 </html>
